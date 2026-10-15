@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>为什么制造业离不开 GEO｜可视化解读</title>
+<meta name="description" content="基于艾瑞咨询《2026年重点行业GEO差异化策略研究报告》的制造业 GEO 可视化解读：采购入口迁移、两个核心指标、口径红线与落地路径。">
+<style>
+:root{
+  --ink:#0f2540; --ink2:#35526f; --muted:#6b7f95;
+  --bg:#f5f7fa; --card:#ffffff; --line:#e2e8f0;
+  --accent:#d98207; --accent-soft:#fdf4e3;
+  --steel:#2f6fb0; --bad:#b3402f;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(15,37,64,.05),0 8px 24px rgba(15,37,64,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+/* ---------- Hero ---------- */
+.hero{
+  background:linear-gradient(150deg,#0d2137 0%,#16324f 55%,#1b3c5c 100%);
+  color:#fff; padding:64px 0 56px; position:relative; overflow:hidden;
+}
+.hero::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:44px 44px; mask-image:linear-gradient(to bottom,rgba(0,0,0,.6),transparent 85%);
+}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{
+  display:inline-block; font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:#ffcf7a; border:1px solid rgba(255,207,122,.4); border-radius:999px;
+  padding:5px 13px; margin-bottom:20px;
+}
+.hero h1{font-size:clamp(30px,5.2vw,50px);line-height:1.22;margin:0 0 18px;font-weight:800;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:#ffcf7a}
+.lead{font-size:clamp(15.5px,2.2vw,18.5px);color:#c8d8e8;max-width:760px;margin:0 0 28px}
+.lead strong{color:#fff;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16);
+  border-radius:10px; padding:9px 14px; font-size:13.5px; color:#dce8f4;
+}
+.chip b{color:#fff;font-weight:700}
+
+/* ---------- Nav ---------- */
+nav.toc{
+  position:sticky; top:0; z-index:20; background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+nav.toc ul{
+  list-style:none; margin:0; padding:0; display:flex; gap:4px;
+  overflow-x:auto; scrollbar-width:none; white-space:nowrap;
+}
+nav.toc ul::-webkit-scrollbar{display:none}
+nav.toc a{
+  display:block; padding:13px 13px; font-size:13.5px; color:var(--ink2);
+  text-decoration:none; border-bottom:2.5px solid transparent; font-weight:600;
+}
+nav.toc a:hover{color:var(--accent)}
+nav.toc a.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---------- Section ---------- */
+section{padding:56px 0 8px}
+.sec-num{
+  font-size:12.5px;font-weight:800;letter-spacing:.16em;color:var(--accent);
+  text-transform:uppercase;margin-bottom:8px
+}
+h2{font-size:clamp(23px,3.4vw,31px);line-height:1.32;margin:0 0 12px;font-weight:800;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15.5px;margin:0 0 28px;max-width:780px}
+
+/* ---------- Card ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.pad{padding:22px}
+@media(max-width:860px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- Bars ---------- */
+.bars{display:grid;gap:15px}
+.bar-item .bar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;margin-bottom:7px}
+.bar-item .bar-top span:last-child{font-weight:800;color:var(--accent);font-size:17px}
+.track{height:11px;background:#eaeef4;border-radius:999px;overflow:hidden}
+.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#d98207,#f0a833)}
+
+/* ---------- Callout ---------- */
+.callout{
+  border-left:4px solid var(--accent); background:var(--accent-soft);
+  padding:16px 20px; border-radius:0 12px 12px 0; margin:22px 0;
+  font-size:16px; line-height:1.72;
+}
+.callout b{color:#8a5308}
+.callout.warn{border-left-color:var(--bad);background:#fdf0ee}
+.callout.warn b{color:#8d2e1f}
+
+/* ---------- Flow compare ---------- */
+.flow-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.flow-wrap{grid-template-columns:1fr}}
+.flow{padding:22px}
+.flow h3{margin:0 0 4px;font-size:16.5px;font-weight:800}
+.flow .tag{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.steps li{
+  display:flex;gap:11px;align-items:flex-start;font-size:14.5px;
+  padding:11px 13px;border-radius:10px;background:#f7f9fc;border:1px solid var(--line);
+}
+.steps li i{
+  flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+  font-style:normal;font-size:12px;font-weight:800;color:#fff;background:#a9b6c6;
+}
+.flow.hot .steps li{background:#fffaf1;border-color:#f4ddb3}
+.flow.hot .steps li i{background:var(--accent)}
+.flow-note{
+  margin-top:16px;padding:11px 14px;border-radius:10px;font-size:14px;font-weight:700;
+  background:#fffaf1;border:1px dashed #e6c07a;color:#8a5308;
+}
+.flow.old .flow-note{background:#f6f8fb;border-color:var(--line);color:var(--ink2)}
+
+/* ---------- Table ---------- */
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:#f7f9fc;font-weight:800;font-size:13.5px;color:var(--ink2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fafcfe}
+td b{color:var(--ink)}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:#8a5308;white-space:nowrap}
+.pill.gray{background:#eef2f7;color:var(--ink2)}
+.pill.red{background:#fdeeeb;color:#96301f}
+
+/* ---------- Metric cards ---------- */
+.metric{padding:26px 24px;text-align:left;border-top:4px solid var(--accent)}
+.metric.m2{border-top-color:var(--steel)}
+.metric .mk{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.metric h3{margin:8px 0 10px;font-size:24px;font-weight:800}
+.metric p{margin:0;color:var(--ink2);font-size:14.8px}
+.metric ul{margin:12px 0 0;padding-left:19px;color:var(--ink2);font-size:14.3px}
+.metric ul li{margin-bottom:5px}
+
+/* ---------- Reason cards ---------- */
+.reason{padding:22px}
+.reason .ico{
+  width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;
+  background:linear-gradient(140deg,#d98207,#f0a833);color:#fff;font-weight:800;font-size:16px;
+}
+.reason h3{margin:0 0 8px;font-size:16.5px;font-weight:800}
+.reason p{margin:0;color:var(--ink2);font-size:14.5px}
+.reason .evidence{
+  margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+  font-size:13.2px;color:var(--muted);
+}
+
+/* ---------- Red line ---------- */
+.red-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.red-grid{grid-template-columns:1fr}}
+.red{padding:22px;border:1px solid #f0c8bd;background:#fdf6f4;border-radius:var(--radius)}
+.red h3{margin:0 0 14px;font-size:16px;font-weight:800;color:#96301f}
+.bad-words{display:flex;flex-wrap:wrap;gap:9px}
+.bad-words span{
+  background:#fff;border:1px solid #e8b8ac;color:#96301f;
+  padding:7px 13px;border-radius:9px;font-size:14.5px;font-weight:700;
+}
+.rule-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.rule-list li{font-size:14.5px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;color:var(--ink2)}
+.rule-list li b{color:var(--ink)}
+
+/* ---------- Steps timeline ---------- */
+.tiers{display:grid;gap:14px}
+.tier{padding:20px 22px}
+.tier .tier-h{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.tier .lvl{
+  flex:none;background:var(--accent);color:#fff;font-size:12.5px;font-weight:800;
+  padding:4px 11px;border-radius:7px;letter-spacing:.04em;
+}
+.tier h3{margin:0;font-size:17px;font-weight:800}
+.tier p{margin:0;color:var(--ink2);font-size:14.6px}
+.tier ul{margin:11px 0 0;padding-left:19px;color:var(--ink2);font-size:14.2px}
+
+/* ---------- Src ---------- */
+.src{padding:22px;font-size:14px;color:var(--ink2)}
+.src ol{margin:0;padding-left:20px}
+.src li{margin-bottom:11px}
+.src a{color:var(--steel);text-decoration:none;border-bottom:1px solid #cddff0;word-break:break-all}
+.src a:hover{border-bottom-color:var(--steel)}
+.src .note{
+  margin-top:16px;padding:14px 16px;border-radius:10px;background:#f7f9fc;
+  border:1px solid var(--line);font-size:13.5px;color:var(--muted);
+}
+
+footer{margin-top:56px;padding:30px 0 44px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+@media print{
+  nav.toc{display:none}
+  body{background:#fff}
+  .card{box-shadow:none;break-inside:avoid}
+  section{padding-top:28px}
+  .hero{background:#0d2137!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">GEO · 制造业获客新入口</span>
+    <h1>为什么制造业<br>离不开 <em>GEO</em></h1>
+    <p class="lead">
+      采购方不再逐页翻排名了——他们直接问 AI：<strong>「××零件哪家靠谱？」「通过 ISO9001 的精密铸造厂有哪些？」</strong>
+      AI 给出的那几行答案，就是新的供应商预选名单。<strong>名单里没有你，你连被比较的资格都没有。</strong>
+    </p>
+    <div class="chips">
+      <span class="chip"><b>①</b> 入口正在迁移</span>
+      <span class="chip"><b>②</b> 只看推荐位 + 认知度</span>
+      <span class="chip"><b>③</b> 不承诺排名 · 不编数据</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">入口迁移</a></li>
+      <li><a href="#s2">两条路径</a></li>
+      <li><a href="#s3">GEO≠竞价</a></li>
+      <li><a href="#s4">制造业吃亏在哪</a></li>
+      <li><a href="#s5">只看两个指标</a></li>
+      <li><a href="#s6">检测看什么</a></li>
+      <li><a href="#s7">异议速查</a></li>
+      <li><a href="#s8">口径红线</a></li>
+      <li><a href="#s9">怎么落地</a></li>
+      <li><a href="#s10">数据来源</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- 1 -->
+<section id="s1">
+  <div class="sec-num">01 · 入口已经迁移</div>
+  <h2>AI 已经是 B2B 采购的核心信息渠道</h2>
+  <p class="sub">艾瑞咨询 2026 年 8 月发布的调研显示：企业用户使用 AI 搜索的目的高度集中——比对参数、找方案、选供应商，这三类需求几乎覆盖了全部搜索动机。</p>
+
+  <div class="grid g3" style="margin-bottom:22px">
+    <div class="card pad">
+      <div style="font-size:13px;color:var(--muted);font-weight:700">企业用户常态化使用 AI 查供应商</div>
+      <div style="font-size:38px;font-weight:800;line-height:1.2;margin-top:6px;color:var(--accent)">过半数</div>
+      <div style="font-size:13.5px;color:var(--ink2);margin-top:4px">「常态化高频使用」</div>
+    </div>
+    <div class="card pad">
+      <div style="font-size:13px;color:var(--muted);font-weight:700">三大目的覆盖搜索需求</div>
+      <div style="font-size:38px;font-weight:800;line-height:1.2;margin-top:6px;color:var(--accent)">近 80%</div>
+      <div style="font-size:13.5px;color:var(--ink2);margin-top:4px">参数成本 · 行业方案 · 适配厂商</div>
+    </div>
+    <div class="card pad">
+      <div style="font-size:13px;color:var(--muted);font-weight:700">未被 AI 理解推荐的代价</div>
+      <div style="font-size:38px;font-weight:800;line-height:1.2;margin-top:6px;color:var(--accent)">≈ 8 成</div>
+      <div style="font-size:13.5px;color:var(--ink2);margin-top:4px">潜在商机被筛掉</div>
+    </div>
+  </div>
+
+  <div class="card pad">
+    <div style="font-size:15px;font-weight:800;margin-bottom:18px">企业用户使用 AI 搜索的三大目的</div>
+    <div class="bars">
+      <div class="bar-item">
+        <div class="bar-top"><span>对比参数与成本</span><span>67.3%</span></div>
+        <div class="track"><div class="fill" style="width:67.3%"></div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-top"><span>寻求行业解决方案</span><span>66.1%</span></div>
+        <div class="track"><div class="fill" style="width:66.1%"></div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-top"><span>匹配适配的服务商</span><span>65.8%</span></div>
+        <div class="track"><div class="fill" style="width:65.8%"></div></div>
+      </div>
+    </div>
+    <div style="margin-top:18px;font-size:13px;color:var(--muted)">数据来源：艾瑞咨询《2026年重点行业GEO差异化策略研究报告》，2026 年 8 月发布，含 1000 份问卷及企业用户调研。</div>
+  </div>
+
+  <div class="callout">
+    AI 不再是「检索工具」，它是采购决策的<b>第一道筛选器</b>。被 AI 精准理解并推荐，才谈得上进入采购人的视野；否则直接失去近八成潜在商机。
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <div class="sec-num">02 · 两条路径</div>
+  <h2>采购路径已经换了走法</h2>
+  <p class="sub">同一笔需求，过去和现在走的是两条完全不同的路。差别在于：中间那一步「初筛」，已经交给了 AI。</p>
+
+  <div class="flow-wrap">
+    <div class="card flow old">
+      <h3>过去</h3>
+      <div class="tag">人在翻，AI 不在场</div>
+      <ol class="steps">
+        <li><i>1</i><span>明确需求：要找什么、要什么资质</span></li>
+        <li><i>2</i><span>上平台搜关键词</span></li>
+        <li><i>3</i><span>逐页翻排名、看店铺年限与认证</span></li>
+        <li><i>4</i><span>挑几家发询盘</span></li>
+        <li><i>5</i><span>谈判、签约</span></li>
+      </ol>
+      <div class="flow-note">比的是：谁排得前、谁铺得多</div>
+    </div>
+    <div class="card flow hot">
+      <h3>现在</h3>
+      <div class="tag">AI 初筛，人只做终选</div>
+      <ol class="steps">
+        <li><i>1</i><span>明确需求：要找什么、要什么资质</span></li>
+        <li><i>2</i><span>问 AI：「推荐几家靠谱的 ×× 供应商」</span></li>
+        <li><i>3</i><span>AI 整合全网信息，生成 3–5 家名单</span></li>
+        <li><i>4</i><span>只联系名单里的企业</span></li>
+        <li><i>5</i><span>谈判、签约</span></li>
+      </ol>
+      <div class="flow-note">比的是：AI 认不认识你、说不说得准</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    过去<b>抢位置</b>，现在<b>攒资产</b>。位置可以在名单里被别人买走，资产（可核验的技术参数、资质、案例）则会长期留在 AI 的信源里。
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <div class="sec-num">03 · 正本清源</div>
+  <h2>GEO 不是「另一种竞价推广」</h2>
+  <p class="sub">这是被问得最多的一句话。两者触发方式、作用机制、停投后的结果都不一样。</p>
+
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:20%">维度</th><th style="width:40%">传统搜索竞价</th><th style="width:40%">GEO</th></tr></thead>
+      <tbody>
+        <tr><td><b>触发</b></td><td>客户主动搜索关键词</td><td>客户把问题丢给 AI</td></tr>
+        <tr><td><b>机制</b></td><td>买下前排位置</td><td>让 AI 在回答里主动点名</td></tr>
+        <tr><td><b>本质</b></td><td><span class="pill gray">抢位置</span></td><td><span class="pill">被推荐 + 被说准</span></td></tr>
+        <tr><td><b>资产属性</b></td><td>位置是租来的，停投即无</td><td>内容留下来，仍持续被 AI 识别</td></tr>
+        <tr><td><b>评价单位</b></td><td>曝光、点击</td><td>推荐位（AI 答不答你、排在哪）<br>认知度（AI 把你说准不准）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <b>「一个是租，一个是攒。」</b>——推广费停了就没了；GEO 的内容停了还在，还持续被 AI 认。
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <div class="sec-num">04 · 制造业的结构性劣势</div>
+  <h2>为什么偏偏制造业最吃亏</h2>
+  <p class="sub">B2B 采购本来就决策周期长、角色多、依赖专业信息验证。制造业在这之上，还有一层别人没有的坑。</p>
+
+  <div class="grid g2">
+    <div class="card reason">
+      <div class="ico">1</div>
+      <h3>真本事「深藏闺中」，AI 抓不到</h3>
+      <p>设备参数、工艺标准大多埋在技术手册、PDF 文件和图纸里。AI 无法精准抓取与验证，结果是——技术领先的制造企业，在 AI 问答里反而「隐身」。</p>
+      <div class="evidence">报告原话：核心技术参数深藏于技术手册、PDF 文档和图纸中，导致技术领先的制造企业在 AI 问答中「隐身」。</div>
+    </div>
+    <div class="card reason">
+      <div class="ico">2</div>
+      <h3>客户问的是品类词，不是你的品牌</h3>
+      <p>没人上来就搜你的厂名。真实问法是「华中地区有哪些通过 ISO9001 的精密铸造供应商」——你不在预设名单里，客户根本不会知道你存在。</p>
+      <div class="evidence">对应口径：动作围绕着「客户问到这个品类时，答案里有你」。</div>
+    </div>
+    <div class="card reason">
+      <div class="ico">3</div>
+      <h3>决策链长，任一环节掉链就出局</h3>
+      <p>采购、技术、老板三层可能各自去问 AI。只要有一环查不到你、或查到的说法不一致，你的企业就在内部评审时被拿掉了。</p>
+      <div class="evidence">验证层风险：官网、行业平台、企业名录上的名称/地址/业务描述相互矛盾时，AI 交叉验证会直接拉低信任。</div>
+    </div>
+    <div class="card reason">
+      <div class="ico">4</div>
+      <h3>资质是硬门槛，被 AI 说错即出局</h3>
+      <p>CE、UL、TÜV、IEC、ISO 这类认证，是 AI 推荐工业品供应商时最关键的可核验事实。AI 漏提、错提或张冠李戴，等于把你的入场资格弄丢。</p>
+      <div class="evidence">务必做「事实错误明细」与「信息缺项」两项核查。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <div class="sec-num">05 · 唯一两个指标</div>
+  <h2>只看两个数：推荐位 + 认知度</h2>
+  <p class="sub">口径底线非常清楚：<b>推荐位 + 认知度，不承诺排名、不承诺效果数字</b>。任何自造的第三个词，都是偏离。</p>
+
+  <div class="grid g2">
+    <div class="card metric">
+      <div class="mk">指标 A</div>
+      <h3>推荐位</h3>
+      <p>AI <b>答不答你</b>、<b>排在哪</b>。</p>
+      <ul>
+        <li>提问集命中率（AI 提到你的比例）</li>
+        <li>入榜问题明细（哪几条进、哪几条没进）</li>
+        <li>入榜位置分布（只给区间，不承诺名次）</li>
+        <li>同批竞品对照（只陈述结果，不作优劣评价）</li>
+      </ul>
+    </div>
+    <div class="card metric m2">
+      <div class="mk">指标 B</div>
+      <h3>认知度</h3>
+      <p>AI <b>把你说准不准</b>。</p>
+      <ul>
+        <li>认知准确率（描述正确/错误/缺失的比例）</li>
+        <li>事实错误明细（产品线、资质、区域说错）</li>
+        <li>信息缺项（新业务、子公司、获奖没被提到）</li>
+        <li>表述偏差类型（信息过期 / 概念混淆 / 主体错配）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    呈现前后对照有三个硬要求：<b>同题同源同口径</b>（换题集的对照无效）、<b>双指标并排不做合成</b>（不许合成一个「综合提升 XX%」，那会把没修复的事实错误藏起来）、<b>三态呈现</b>（基线值 / 复测值 / 变化方向，下降项必须原样列出）。
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <div class="sec-num">06 · 验收标准</div>
+  <h2>一份像样的检测报告，要看哪些字段</h2>
+  <p class="sub">按四组字段验收。缺一组的报告，不足以支撑报价与承诺。</p>
+
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:16%">组别</th><th style="width:22%">核心字段</th><th style="width:32%">它证明什么</th><th style="width:30%">客户会怎么追问</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="pill">A 组 · 推荐位</span></td>
+          <td>提问集命中率 / 覆盖来源 / 采样时点 / 采样次数与一致性 / 入榜明细 / 位置分布 / 竞品对照</td>
+          <td>目标问题集下，AI 提到你的比例与稳定性</td>
+          <td>「这问题集是不是你们编的？」「为什么是 20 条不是 100 条？」「问一次能算数吗？」</td>
+        </tr>
+        <tr>
+          <td><span class="pill">B 组 · 认知度</span></td>
+          <td>认知准确率 / 事实错误明细 / 信息缺项 / 表述偏差类型 / 数据来源占比</td>
+          <td>AI 描述你时的正确率，以及错在哪、缺什么</td>
+          <td>「『准确』谁定的标准？」「这条错在哪？」「缺了会怎样？」</td>
+        </tr>
+        <tr>
+          <td><span class="pill">C 组 · 信源</span></td>
+          <td>被引用来源清单 / 来源权威度分档 / 竞品被引用来源清单</td>
+          <td>AI 到底是根据哪些来源在描述你</td>
+          <td>「凭什么信这些来源？」</td>
+        </tr>
+        <tr>
+          <td><span class="pill">D 组 · 执行成熟度</span></td>
+          <td>知识资产盘点 / 官网百科现状 / 可改造入口清单</td>
+          <td>有哪些可动手改造的位置——这是报价「条数」的依据</td>
+          <td>「你这报价是凭什么算出来的？」</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <b>样本门槛：</b>建议 20 组问题 × 每组 ≥3 次采样。任一字段低于最小样本门槛，必须标注<b>「样本不足，不作为报价与承诺依据」</b>。
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <div class="sec-num">07 · 异议应对</div>
+  <h2>客户最常问的 6 句话，标准应答</h2>
+  <p class="sub">话术不求华丽，求「不加戏」。每一句都在做同一件事：把承诺拉回到可控的动作上。</p>
+
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:26%">客户说</th><th>你答</th></tr></thead>
+      <tbody>
+        <tr><td><b>「这不就是百度推广吗？」</b></td><td>百度是客户主动搜、你买前排；GEO 是客户问 AI，AI 直接点名。<b>一个抢位置，一个让 AI 主动提你。</b></td></tr>
+        <tr><td><b>「AI 会不会瞎说？」</b></td><td>AI 是会瞎说，所以我们让您信息准、结构清楚，<b>让它不容易说错</b>。</td></tr>
+        <tr><td><b>「太贵了 / 我再想想。」</b></td><td>推广费停了就没，GEO 的内容停了还在、还持续被 AI 认。<b>一个是租，一个是攒。</b>另外只问一句：一年拉新，您现在投了多少？</td></tr>
+        <tr><td><b>「能保证效果吗？」</b></td><td>不保证排名，只保证<b>动作</b>——每周做什么、什么时候交数据，都写进合同。</td></tr>
+        <tr><td><b>「凭什么信你？」</b></td><td>您不用先信我。先看这份检测，再看一周后交的第一批数据，<b>觉得不行随时停</b>。</td></tr>
+        <tr><td><b>「我要对比几家。」</b></td><td>去对比。只提醒问一句：<b>他的服务清单里写没写您这个品类的名字？</b>没写，那就是通用套餐，谁都能卖。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <div class="sec-num">08 · 口径红线</div>
+  <h2>三个不能说的词，三个不能做的事</h2>
+  <p class="sub">这套红线本身就是产品质量的一部分。凡是拿「保证」「排名」「一定推荐」换单子的，后期一定炸。</p>
+
+  <div class="red-grid">
+    <div class="red">
+      <h3>绝对不能说的三个词</h3>
+      <div class="bad-words"><span>保证</span><span>排名</span><span>一定推荐</span></div>
+    </div>
+    <div class="red">
+      <h3>绝对不能做的三件事</h3>
+      <div class="bad-words"><span>贬同行</span><span>编数据（含行业均值）</span><span>报价环节主动降价</span></div>
+    </div>
+  </div>
+
+  <div class="tiers" style="margin-top:16px">
+    <div class="card tier">
+      <div class="tier-h"><span class="lvl">L1</span><h3>可写入合同</h3></div>
+      <p>推荐位与认知度的<b>区间值</b>、交付里程碑与交付物条数。</p>
+      <ul>
+        <li>必须同时写明：问题集来源与条数、采样平台与时点、采样次数、「入榜」定义</li>
+        <li>免责限定缺一不可：不承诺具体位次 · 不承诺 AI 的具体措辞 · 不承诺超出客户配合能力的结果 · 不承诺竞品表现 · 复测须与基线同一口径</li>
+        <li>区间推导：<b>下限 = 基线值 + 提升幅度；上限 = 基线值 + 提升幅度 × 1.5</b>（基线极高或极低时单独出说明）</li>
+      </ul>
+    </div>
+    <div class="card tier">
+      <div class="tier-h"><span class="lvl" style="background:#6b7f95">L2</span><h3>只口头说</h3></div>
+      <p>结论性描述、可能性判断、平台一般性经验。</p>
+      <ul><li>须加「<b>以平台实际口径为准</b>」，并当日回填《口径记录表》——未回填的口头承诺，视同未承诺。</li></ul>
+    </div>
+    <div class="card tier">
+      <div class="tier-h"><span class="lvl" style="background:var(--bad)">L3</span><h3>绝对不能说</h3></div>
+      <p>保证进第一 / 前三、三个月一定到 XX%、行业里我们效果最好、自造行业均值、算法机理断言、保排名保收录、用检测平台为效果背书。</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>为什么这条红线对制造业尤其重要：</b>工业参数的描述一旦被 AI 说错，损失不是一个月的 ROI，而是<b>资质与批次合规性</b>层面的客户信任。因此「认知准确率 + 事实错误明细」这两项，在制造业做 GEO 时优先级高于单纯的曝光量。
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <div class="sec-num">09 · 落地路径</div>
+  <h2>制造业 GEO 该往哪三步走</h2>
+  <p class="sub">把「深藏的技术能力」翻译成 AI 能引用、能核验的知识资产。分层做，不要一次性铺开。</p>
+
+  <div class="grid g3">
+    <div class="card pad">
+      <div class="pill">第一层</div>
+      <h3 style="margin:12px 0 8px;font-size:17px">企业主体基础内容</h3>
+      <p style="margin:0;color:var(--ink2);font-size:14.5px">企业全称、主营品类、服务覆盖行业、对接岗位、联系方式；以及经营许可、行业资质认证、等级、检测报告。</p>
+      <div style="margin-top:11px;font-size:13.2px;color:var(--muted)">目标：让 AI 先<b>认得你</b>、说得对主体信息。</div>
+    </div>
+    <div class="card pad">
+      <div class="pill">第二层</div>
+      <h3 style="margin:12px 0 8px;font-size:17px">可量化的技术参数</h3>
+      <p style="margin:0;color:var(--ink2);font-size:14.5px">精度、效率、吞吐量、MTBF……把「可靠性很高」换成能被比较的数字。</p>
+      <div style="margin-top:11px;font-size:13.2px;color:var(--muted)">目标：让 AI 能<b>横向比较</b>，而不是复述形容词。</div>
+    </div>
+    <div class="card pad">
+      <div class="pill">第三层</div>
+      <h3 style="margin:12px 0 8px;font-size:17px">可验证的信任证据</h3>
+      <p style="margin:0;color:var(--ink2);font-size:14.5px">CE / UL / TÜV / IEC / ISO 等第三方认证，以及带项目规模与应用场景的可追溯客户案例。</p>
+      <div style="margin-top:11px;font-size:13.2px;color:var(--muted)">目标：给 AI <b>可引用的信源</b>，而非自述。</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>产业带策略：</b>采用「区域标签 + 核心能力」的组合方式，例如「佛山包装机械」「东莞五金模具」「宁波注塑机」「徐州工程机械」。AI 在做本地化 B2B 推荐时，区域标签与核心能力的组合是高度看重的匹配维度。
+  </div>
+
+  <div class="card pad" style="margin-top:8px">
+    <div style="font-size:15px;font-weight:800;margin-bottom:14px">服务该按什么定价</div>
+    <div class="tbl-scroll" style="box-shadow:none;margin:0">
+      <table>
+        <thead><tr><th style="width:22%">段</th><th style="width:26%">名称</th><th style="width:28%">依据来源</th><th style="width:24%">讲法</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill gray">①</span></td><td>诊断与基线固化</td><td>问题集规模、条数、采样次数</td><td>先把基线测准，否则后面谁都说不清</td></tr>
+          <tr><td><span class="pill gray">②</span></td><td>内容资产建设</td><td>可改造入口清单 × 改造深度档</td><td>改哪几个位置、每处写多少，数得出来</td></tr>
+          <tr><td><span class="pill gray">③</span></td><td>信源与权威背书铺设</td><td>来源清单 + 目标来源缺口</td><td>铺多少条、什么档位，按缺口算</td></tr>
+          <tr><td><span class="pill gray">④</span></td><td>复测与迭代</td><td>复测轮次 × 问题集规模</td><td>改完之后怎么验、验几轮</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:13.5px;color:var(--ink2)">
+      锚点原则：<b>① 按工作量锚；②③④ 按可点名的交付条数锚</b>，客户能在合同附表逐条勾验收。讲不出「几条／几处／几轮」的成本项，一律不进报价。
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <div class="sec-num">10 · 数据来源与口径声明</div>
+  <h2>数据从哪来，我们承诺什么</h2>
+  <p class="sub">遵循同一条铁律：不承诺排名、不承诺效果数字、不编造行业均值。</p>
+
+  <div class="card src">
+    <ol>
+      <li>
+        <b>艾瑞咨询《2026年重点行业GEO差异化策略研究报告》</b>（2026 年 8 月发布，含 1000 份消费者问卷及企业用户调研）。
+        本页「67.3% / 66.1% / 65.8%」「过半数常态化使用」「近八成」「B2B 知识图谱三层次」「制造业技术参数错乱」均出自该报告。
+        <br><a href="https://www.cinn.cn/hz/2026/08-05/gD7OpwXD.html" target="_blank" rel="noopener">中国工业新闻网 · 艾瑞咨询2026GEO报告</a>
+      </li>
+      <li>
+        本页其余内容整理自 GEO 交付方法论底稿（《GEO标准销售流程.md》），包括两个核心指标、四组检测字段、样本门槛、三级承诺口径与红线表述。
+      </li>
+    </ol>
+    <div class="note">
+      <b>口径声明：</b>本页所有百分比均标注了来源，<b>不包含任何自行推算的行业均值或效果数字</b>；
+      亦不对 AI 平台算法机理、具体推荐位次、AI 回答措辞作任何承诺。网络上流传的其他二手数据（如各类采购渗透率）本版未予采用，
+      因其原始报告无法核证——这正是第 08 节「不编数据」红线所要求的做法。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>为什么制造业离不开 GEO · 可视化解读</div>
+    <div>内容依据：艾瑞咨询 2026 报告 + GEO 交付方法论底稿</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var ticking = false;
+  function highlight(){
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i].getBoundingClientRect().top <= 140) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(highlight); }
+  }, {passive:true});
+  highlight();
+})();
+</script>
+
+</body>
+</html>
